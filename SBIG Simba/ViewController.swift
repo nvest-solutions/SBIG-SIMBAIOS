@@ -26,7 +26,7 @@ class ViewController: UIViewController, WKNavigationDelegate{
         view.addSubview(webView)
  
         if #available(macOS 13.3, iOS 16.4, tvOS 16.4, *) {
-            webView.isInspectable = true
+//            webView.isInspectable = true
         }
         // Creating and configure loading indicator
         activityIndicator = UIActivityIndicatorView(style: .large)
