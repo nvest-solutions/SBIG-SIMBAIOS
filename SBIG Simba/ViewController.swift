@@ -9,11 +9,12 @@
 import UIKit
 import WebKit
 
-class ViewController: UIViewController, WKNavigationDelegate {
+class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHandler{
 
     var webView: WKWebView!
     var activityIndicator: UIActivityIndicatorView!
-    
+    var fileMimeType: String = ""
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +24,8 @@ class ViewController: UIViewController, WKNavigationDelegate {
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
         webView.configuration.preferences.javaScriptEnabled = true
+        let webConfiguration = WKWebViewConfiguration()
+        webConfiguration.websiteDataStore = WKWebsiteDataStore.default()
         view.addSubview(webView)
  
         if #available(macOS 13.3, iOS 16.4, tvOS 16.4, *) {
@@ -40,11 +43,15 @@ class ViewController: UIViewController, WKNavigationDelegate {
         
         // Set scroll view delegate
         webView.scrollView.delegate = self
-        
+        webView.configuration.userContentController.add(self, name: "blobConverterCallback")
+
     }
 
     func loadWebView() {
-        if let url = URL(string: "https://dipuat.sbigeneral.in/Login/LoginSBI") {
+//        let websiteURL="https://dip.sbigeneral.in/login/loginSBI"//prod
+        let websiteURL="https://dipuat.sbigeneral.in/Login/LoginSBI"//uat
+        
+        if let url = URL(string: websiteURL) {
             let request = URLRequest(url: url)
 
                 // Load WebView content on the main thread
@@ -57,9 +64,10 @@ class ViewController: UIViewController, WKNavigationDelegate {
                 }
             
             }
+      
         }
 
-
+    
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         print("WebView did start loading")
     }
@@ -83,107 +91,183 @@ class ViewController: UIViewController, WKNavigationDelegate {
         }
     }
    
-  
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
-        if #available(iOS 14.5, *) {
-            if navigationAction.shouldPerformDownload {
-                decisionHandler(.download, preferences)
-            } else {
-                decisionHandler(.allow, preferences)
-            }
-        } else {
-            // Fallback on earlier versions
-            // navigationAction.shouldPerformDownload
-        }
-    }
-    
-    func webView(_ webView: WKWebView,
-                 decidePolicyFor navigationResponse: WKNavigationResponse,
-                 decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        
-        if navigationResponse.canShowMIMEType {
-            debugPrint("found")
-            decisionHandler(.allow)
-        } else {
-            let url = navigationResponse.response.url
-            var documentUrl: URL?
-            if #available(iOS 16.0, *) {
-                documentUrl = url?.appending(path: navigationResponse.response.suggestedFilename ?? "LK")
-            } else {
-                // Fallback on earlier versions
-                documentUrl = url?.appendingPathComponent(navigationResponse.response.suggestedFilename!)
-            }
-            loadAndDisplayDocumentFrom(url: documentUrl!)
-            decisionHandler(.cancel)
-        }
-    }
-    
-    private func loadAndDisplayDocumentFrom(url downloadUrl : URL) {
-        let localFileURL = FileManager.default.temporaryDirectory.appendingPathComponent(downloadUrl.lastPathComponent)
-        
-        URLSession.shared.dataTask(with: downloadUrl) { data, response, err in
-            guard let data = data, err == nil else {
-                debugPrint("Error while downloading document from url=\(downloadUrl.absoluteString): \(err.debugDescription)")
+
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+	        if let url = navigationAction.request.url {
+            if url.absoluteString.starts(with: "blob:") {
+
+                getBase64StringFromBlobUrl(blobUrl: url.absoluteString, mimeType: "application/pdf")
+                decisionHandler(.cancel)  // Cancel the navigation
                 return
             }
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                debugPrint("Download http status=\(httpResponse.statusCode)")
+        
+        if url.absoluteString.starts(with: "data:") {
+
+                handleBase64Data(url.absoluteString)
+                decisionHandler(.cancel)  // Cancel the navigation
+                return
             }
-            
-            // write the downloaded data to a temporary folder
-            do {
-                try data.write(to: localFileURL, options: .atomic)   // atomic option overwrites it if needed
-                debugPrint("Stored document from url=\(downloadUrl.absoluteString) in folder=\(localFileURL.absoluteString)")
-                
-                DispatchQueue.main.async {
-                    // localFileURL
-                    // here is where your file
-                    
+        }
+        decisionHandler(.allow)  // Allow other navigations
+    }
+    
+    func getBase64StringFromBlobUrl(blobUrl: String, mimeType: String) {
+        
+        let script = """
+
+              javascript:
+                  var xhr = new XMLHttpRequest();
+                  xhr.open('GET', '" + blobUrl + "', true);
+                  xhr.setRequestHeader('Content-type', '" + mimeType + ";charset=UTF-8');
+                  xhr.responseType = 'blob';
+                  xhr.onload = function(e) {
+                      if (this.status == 200) {
+                          try {
+                              var blobFile = this.response;
+                              var reader = new FileReader();
+                              reader.readAsDataURL(blobFile);
+                              reader.onloadend = function() {
+                                  base64data = reader.result;
+                                  webkit.messageHandlers.blobConverterCallback.postMessage(base64data);
+                              }
+                          } catch(readerError) {
+                              webkit.messageHandlers.blobConverterCallback.postMessage('error: ' + readerError.toString());
+                          }
+                      } else {
+              webkit.messageHandlers.blobConverterCallback.postMessage('error: HTTP status ' + this.status + ' for URL ' + this.responseURL);
+                      }
+                  };
+                  xhr.onerror = function() {
+                      webkit.messageHandlers.blobConverterCallback.postMessage('error: XHR error');
+                  };
+                  xhr.send();
+              """
+
+       
+            webView.evaluateJavaScript(script) { (_, error) in
+                if let error = error {
+                    print("Error evaluating JavaScript: \(error)")
                 }
-            } catch {
-                debugPrint(error)
-                return
             }
-        }.resume()
-    }
- 
-
-    /*
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
-        if #available(iOS 14.5, *) {
-            if navigationAction.shouldPerformDownload {
-                decisionHandler(.download, preferences)
-            } else {
-                decisionHandler(.allow, preferences)
-            }
-        } else {
-            // Fallback on earlier versions
-        }
     }
     
-}
-
-@available(iOS 14.5, *)
-extension ViewController: WKDownloadDelegate {
    
-    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String) async -> URL? {
-        let url = // the URL where you want to save the file, optionally appending `suggestedFileName`
-           completionHandler(url)
-    }
     
     
-    @available(iOS 14.5, *)
-    func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
-        download.delegate = self// your `WKDownloadDelegate`
-    }
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+           if message.name == "blobConverterCallback" {
+               print("base64 \(message.body)")
+
+               if let base64String = message.body as? String {
+                   // Handle the base64 data here
+                   handleBase64Data(base64String)
+               }
+           }
+       }
+       
+       
+       func handleBase64Data(_ base64String: String) {
+           
+
+           var newBase64=base64String.replacingOccurrences(of: "\n", with:"")
+           var fileExtension: String="pdf"
+           
+           if let ext = getFileExtension(fromBase64String: newBase64) {
+               print("The file extension is: \(ext)")
+               fileExtension = ext
+               newBase64 = newBase64.replacingOccurrences(of: "data:application/\(ext);base64,", with: "")
+           } else {
+               print("Could not determine the file extension.")
+           }
+
+               
+           if let data = Data(base64Encoded: newBase64) {
+                   // Save the data to a file
+                   let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+               
+               let now = Date()
+
+               let formatter = DateFormatter()
+               formatter.dateFormat = "yyyyMMdd_HHmmss"
+               let timestamp = formatter.string(from: now)
+               
+                   let filePath = documentsPath.appendingPathComponent("\(timestamp)_.\(fileExtension)")
+                   
+                   do {
+                       try data.write(to: filePath)
+                       print("File saved to: \(filePath)")
+                       
+                       DispatchQueue.main.async {
+                           self.showNotification(filePath: filePath)
+                       }
+
+                   } catch {
+                       print("Error saving file: \(error)")
+                   }
+               }
+       }
+    
+    func showNotification(filePath: URL) {
+        let content = UNMutableNotificationContent()
+          content.title = "File downloaded"
+          content.body = "PDF"
+          content.sound = UNNotificationSound.default
+          content.userInfo = ["filePath": filePath.path]
+          
+          // Set categoryIdentifier for the notification
+          content.categoryIdentifier = "persistentNotification"
+
+          let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+
+          let notificationCenter = UNUserNotificationCenter.current()
+          
+          // Define the category with options
+          let category = UNNotificationCategory(identifier: "persistentNotification",
+                                                actions: [],
+                                                intentIdentifiers: [],
+                                                options: .customDismissAction)
+          
+          // Register the category
+          notificationCenter.setNotificationCategories([category])
+
+          notificationCenter.add(request) { error in
+              if let error = error {
+                  print("Error showing notification: \(error)")
+              }
+          }
+
         
-    @available(iOS 14.5, *)
-    func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
-        download.delegate = self// your `WKDownloadDelegate`
+
+    }
+    
+
+    func getFileExtension(fromBase64String base64String: String) -> String? {
+        // Check if the Base64 string contains a data URL prefix
+        if let dataPrefixRange = base64String.range(of: "data:") {
+            // Extract the MIME type
+            let prefix = base64String[..<dataPrefixRange.upperBound]
+            if let semicolonRange = base64String.range(of: ";", range: dataPrefixRange.upperBound..<base64String.endIndex) {
+                let mimeType = base64String[dataPrefixRange.upperBound..<semicolonRange.lowerBound]
+                
+                // Map MIME type to file extension
+                switch mimeType {
+                case "image/jpeg": return "jpg"
+                case "image/png": return "png"
+                case "image/gif": return "gif"
+                case "image/tiff": return "tiff"
+                case "image/webp": return "webp"
+                case "application/pdf": return "pdf"
+                case "text/plain": return "txt"
+                case "text/html": return "html"
+                case "application/json": return "json"
+                default: return "pdf"
+                }
+            }
+        }
+        return nil
     }
 
-    */
+    
 }
 
 
