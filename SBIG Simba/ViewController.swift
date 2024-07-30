@@ -49,7 +49,8 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
 
     func loadWebView() {
 //        let websiteURL="https://dip.sbigeneral.in/login/loginSBI"//prod
-        let websiteURL="https://dipuat.sbigeneral.in/Login/LoginSBI"//uat
+//        let websiteURL="https://dipuat.sbigeneral.in/Login/LoginSBI"//uat for nvest
+        let websiteURL="https://dipuat.sbigen.in/Login/LoginSBI"//uat for cleint
         
         if let url = URL(string: websiteURL) {
             let request = URLRequest(url: url)
