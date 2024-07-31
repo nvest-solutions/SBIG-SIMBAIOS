@@ -25,6 +25,8 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
         webView.navigationDelegate = self
         webView.configuration.preferences.javaScriptEnabled = true
         let webConfiguration = WKWebViewConfiguration()
+        webConfiguration.allowsInlineMediaPlayback = true
+
         webConfiguration.websiteDataStore = WKWebsiteDataStore.default()
         view.addSubview(webView)
  
@@ -48,9 +50,9 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
     }
 
     func loadWebView() {
-//        let websiteURL="https://dip.sbigeneral.in/login/loginSBI"//prod
+        let websiteURL="https://dip.sbigeneral.in/login/loginSBI"//prod
 //        let websiteURL="https://dipuat.sbigeneral.in/Login/LoginSBI"//uat for nvest
-        let websiteURL="https://dipuat.sbigen.in/Login/LoginSBI"//uat for cleint
+//        let websiteURL="https://dipuat.sbigen.in/Login/LoginSBI"//uat for cleint
         
         if let url = URL(string: websiteURL) {
             let request = URLRequest(url: url)
