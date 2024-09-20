@@ -18,16 +18,18 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        let webConfiguration = WKWebViewConfiguration()
+        
+        webConfiguration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
+        webConfiguration.allowsInlineMediaPlayback = true
+        webConfiguration.websiteDataStore = WKWebsiteDataStore.default()
         // Creating WKWebView
-        webView = WKWebView(frame: view.bounds)
+        webView = WKWebView(frame: view.bounds,configuration: webConfiguration)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
         webView.configuration.preferences.javaScriptEnabled = true
-        let webConfiguration = WKWebViewConfiguration()
-        webConfiguration.allowsInlineMediaPlayback = true
-
-        webConfiguration.websiteDataStore = WKWebsiteDataStore.default()
+     
         view.addSubview(webView)
  
         if #available(macOS 13.3, iOS 16.4, tvOS 16.4, *) {
@@ -50,10 +52,10 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
     }
 
     func loadWebView() {
-        let websiteURL="https://dip.sbigeneral.in/login/loginSBI"//prod
-//        let websiteURL="https://dipuat.sbigeneral.in/Login/LoginSBI"//uat for nvest
-//        let websiteURL="https://dipuat.sbigen.in/Login/LoginSBI"//uat for cleint
-        
+//        let websiteURL="https://dip.sbigeneral.in/login/loginSBI"//prod
+       let websiteURL="https://dipuat.sbigeneral.in/Login/LoginSBI"//uat for nvest
+//       let websiteURL="https://dipuat.sbigen.in/Login/LoginSBI"//uat for cleint
+//    let websiteURL = "http://13.234.16.249:1027/capture.html"
         if let url = URL(string: websiteURL) {
             let request = URLRequest(url: url)
 
@@ -167,8 +169,57 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
                }
            }
        }
-       
-       
+    
+    func handleBase64Data(_ base64String: String) {
+        
+        var newBase64 = base64String.replacingOccurrences(of: "\n", with: "")
+        var fileExtension: String = "pdf"
+        if let ext = getFileExtension(fromBase64String: newBase64) {
+            print("The file extension is: \(ext)")
+            fileExtension = ext
+            newBase64 = newBase64.replacingOccurrences(of: "data:application/\(ext);base64,", with: "")
+        } else {
+            print("Could not determine the file extension.")
+        }
+        
+        if let data = Data(base64Encoded: newBase64) {
+            // Create a temporary file for the user to save
+            let temporaryDirectory = FileManager.default.temporaryDirectory
+            let now = Date()
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyyMMdd_HHmmss"
+            let timestamp = formatter.string(from: now)
+            let fileName = "\(timestamp)_.\(fileExtension)"
+            let tempFilePath = temporaryDirectory.appendingPathComponent(fileName)
+            do {
+                try data.write(to: tempFilePath)
+                print("File temporarily saved to: \(tempFilePath)")
+                // Present UIDocumentPickerViewController to allow the user to save the file
+                if #available(iOS 14.0, *) {
+                    // Present UIDocumentPickerViewController for iOS 14.0 and above
+                    let documentPicker = UIDocumentPickerViewController(forExporting: [tempFilePath], asCopy: true)
+                    documentPicker.delegate = self
+                    documentPicker.modalPresentationStyle = .formSheet
+                    DispatchQueue.main.async {
+                        self.present(documentPicker, animated: true, completion: nil)
+                    }
+                } else {
+                    // Fallback for iOS versions below 14.0
+                    let documentPicker = UIDocumentPickerViewController(url: tempFilePath, in: .exportToService)
+                    documentPicker.delegate = self
+                    documentPicker.modalPresentationStyle = .formSheet
+                    DispatchQueue.main.async {
+                        self.present(documentPicker, animated: true, completion: nil)
+                    }
+                }
+            } catch {
+                print("Error saving file: \(error)")
+            }
+        }
+    }
+    
+    
+       /*
        func handleBase64Data(_ base64String: String) {
            
 
@@ -209,6 +260,7 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
                    }
                }
        }
+        */
     
     func showNotification(filePath: URL) {
         let content = UNMutableNotificationContent()
@@ -281,3 +333,15 @@ extension ViewController: UIScrollViewDelegate {
 }
 
 
+// Implement the UIDocumentPickerDelegate to handle success and errors
+extension ViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        if let savedFileURL = urls.first {
+            print("File successfully saved at: \(savedFileURL)")
+            // Optionally, you can show a notification or perform further actions here
+        }
+    }
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        print("Document picker was cancelled.")
+    }
+}
