@@ -8,6 +8,7 @@
 
 import UIKit
 import WebKit
+import LocalAuthentication
 
 class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHandler{
 
@@ -19,6 +20,7 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.setNavigationBarHidden(true, animated: true)
         let webConfiguration = WKWebViewConfiguration()
         
         webConfiguration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
@@ -41,7 +43,7 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
         activityIndicator.center = view.center
         activityIndicator.hidesWhenStopped = true
         view.addSubview(activityIndicator)
-
+        
         // Load WebView content
         loadWebView()
         
@@ -53,8 +55,8 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
 
     func loadWebView() {
 //        let websiteURL="https://dip.sbigeneral.in/login/loginSBI"//prod
-       let websiteURL="https://dipuat.sbigeneral.in/Login/LoginSBI"//uat for nvest
-//       let websiteURL="https://dipuat.sbigen.in/Login/LoginSBI"//uat for cleint
+//       let websiteURL="https://dipuat.sbigeneral.in/Login/LoginSBI"//uat for nvest
+       let websiteURL="https://dipuat.sbigen.in/Login/LoginSBI"//uat for cleint
 //    let websiteURL = "http://13.234.16.249:1027/capture.html"
         if let url = URL(string: websiteURL) {
             let request = URLRequest(url: url)
@@ -109,6 +111,7 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
         if url.absoluteString.starts(with: "data:") {
 
                 handleBase64Data(url.absoluteString)
+            
                 decisionHandler(.cancel)  // Cancel the navigation
                 return
             }
@@ -345,3 +348,5 @@ extension ViewController: UIDocumentPickerDelegate {
         print("Document picker was cancelled.")
     }
 }
+
+

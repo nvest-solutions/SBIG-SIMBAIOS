@@ -17,6 +17,7 @@
 		18AA3CDF2B62272F00755C62 /* SBIG_SimbaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AA3CDE2B62272F00755C62 /* SBIG_SimbaUITests.swift */; };
 		18AA3CE12B62272F00755C62 /* SBIG_SimbaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AA3CE02B62272F00755C62 /* SBIG_SimbaUITestsLaunchTests.swift */; };
 		18FED00F2C58AC3800CAC404 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18FED00E2C58AC3800CAC404 /* UIViewController+Extension.swift */; };
+		3434BAF42CA2EF7000DC3267 /* BiometricViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3434BAF32CA2EF7000DC3267 /* BiometricViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		18AA3CDE2B62272F00755C62 /* SBIG_SimbaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBIG_SimbaUITests.swift; sourceTree = "<group>"; };
 		18AA3CE02B62272F00755C62 /* SBIG_SimbaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBIG_SimbaUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		18FED00E2C58AC3800CAC404 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		3434BAF32CA2EF7000DC3267 /* BiometricViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 			children = (
 				18AA3CBD2B62272D00755C62 /* AppDelegate.swift */,
 				18AA3CBF2B62272D00755C62 /* SceneDelegate.swift */,
+				3434BAF32CA2EF7000DC3267 /* BiometricViewController.swift */,
 				18AA3CC12B62272D00755C62 /* ViewController.swift */,
 				18AA3CC32B62272D00755C62 /* Main.storyboard */,
 				18AA3CC62B62272F00755C62 /* Assets.xcassets */,
@@ -264,6 +267,7 @@
 				18FED00F2C58AC3800CAC404 /* UIViewController+Extension.swift in Sources */,
 				18AA3CC22B62272D00755C62 /* ViewController.swift in Sources */,
 				18AA3CBE2B62272D00755C62 /* AppDelegate.swift in Sources */,
+				3434BAF42CA2EF7000DC3267 /* BiometricViewController.swift in Sources */,
 				18AA3CC02B62272D00755C62 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
