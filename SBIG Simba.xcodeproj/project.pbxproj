@@ -18,6 +18,9 @@
 		18AA3CE12B62272F00755C62 /* SBIG_SimbaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AA3CE02B62272F00755C62 /* SBIG_SimbaUITestsLaunchTests.swift */; };
 		18FED00F2C58AC3800CAC404 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18FED00E2C58AC3800CAC404 /* UIViewController+Extension.swift */; };
 		3434BAF42CA2EF7000DC3267 /* BiometricViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3434BAF32CA2EF7000DC3267 /* BiometricViewController.swift */; };
+		34DC68242CCF6898000AE351 /* RootDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DC68232CCF6897000AE351 /* RootDetection.swift */; };
+		34DC682A2CCF77EF000AE351 /* sbi_genera.crt in Resources */ = {isa = PBXBuildFile; fileRef = 34DC68292CCF77EF000AE351 /* sbi_genera.crt */; };
+		34FACDBB2CCA693C006C7B8B /* SSLPinningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FACDBA2CCA693C006C7B8B /* SSLPinningDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +56,10 @@
 		18AA3CE02B62272F00755C62 /* SBIG_SimbaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBIG_SimbaUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		18FED00E2C58AC3800CAC404 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		3434BAF32CA2EF7000DC3267 /* BiometricViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricViewController.swift; sourceTree = "<group>"; };
+		34861A792CCB79570019D85B /* SBIG-Simba-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SBIG-Simba-Bridging-Header.h"; sourceTree = "<group>"; };
+		34DC68232CCF6897000AE351 /* RootDetection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootDetection.swift; sourceTree = "<group>"; };
+		34DC68292CCF77EF000AE351 /* sbi_genera.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sbi_genera.crt; sourceTree = "<group>"; };
+		34FACDBA2CCA693C006C7B8B /* SSLPinningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSLPinningDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +90,8 @@
 		18AA3CB12B62272D00755C62 = {
 			isa = PBXGroup;
 			children = (
+				34861A792CCB79570019D85B /* SBIG-Simba-Bridging-Header.h */,
+				34DC68292CCF77EF000AE351 /* sbi_genera.crt */,
 				18AA3CBC2B62272D00755C62 /* SBIG Simba */,
 				18AA3CD32B62272F00755C62 /* SBIG SimbaTests */,
 				18AA3CDD2B62272F00755C62 /* SBIG SimbaUITests */,
@@ -105,6 +114,7 @@
 			children = (
 				18AA3CBD2B62272D00755C62 /* AppDelegate.swift */,
 				18AA3CBF2B62272D00755C62 /* SceneDelegate.swift */,
+				34DC68232CCF6897000AE351 /* RootDetection.swift */,
 				3434BAF32CA2EF7000DC3267 /* BiometricViewController.swift */,
 				18AA3CC12B62272D00755C62 /* ViewController.swift */,
 				18AA3CC32B62272D00755C62 /* Main.storyboard */,
@@ -112,6 +122,7 @@
 				18AA3CC82B62272F00755C62 /* LaunchScreen.storyboard */,
 				18AA3CCB2B62272F00755C62 /* Info.plist */,
 				18FED00E2C58AC3800CAC404 /* UIViewController+Extension.swift */,
+				34FACDBA2CCA693C006C7B8B /* SSLPinningDelegate.swift */,
 			);
 			path = "SBIG Simba";
 			sourceTree = "<group>";
@@ -239,6 +250,7 @@
 			files = (
 				18AA3CCA2B62272F00755C62 /* LaunchScreen.storyboard in Resources */,
 				18AA3CC72B62272F00755C62 /* Assets.xcassets in Resources */,
+				34DC682A2CCF77EF000AE351 /* sbi_genera.crt in Resources */,
 				18AA3CC52B62272D00755C62 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -265,9 +277,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				18FED00F2C58AC3800CAC404 /* UIViewController+Extension.swift in Sources */,
+				34FACDBB2CCA693C006C7B8B /* SSLPinningDelegate.swift in Sources */,
 				18AA3CC22B62272D00755C62 /* ViewController.swift in Sources */,
 				18AA3CBE2B62272D00755C62 /* AppDelegate.swift in Sources */,
 				3434BAF42CA2EF7000DC3267 /* BiometricViewController.swift in Sources */,
+				34DC68242CCF6898000AE351 /* RootDetection.swift in Sources */,
 				18AA3CC02B62272D00755C62 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,8 +484,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sbigsimba.nvest.SBIG-Simba";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = SimbaProvisioningProfile;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Simba Profile Latest 1";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "SBIG-Simba-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -509,8 +524,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sbigsimba.nvest.SBIG-Simba";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = SimbaProvisioningProfile;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Simba Profile Latest 1";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "SBIG-Simba-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

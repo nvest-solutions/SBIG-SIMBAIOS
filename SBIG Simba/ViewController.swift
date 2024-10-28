@@ -50,7 +50,39 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
         // Set scroll view delegate
         webView.scrollView.delegate = self
         webView.configuration.userContentController.add(self, name: "blobConverterCallback")
-
+        
+        // Usage
+        
+        
+        let sslPinningDelegate = SSLPinningDelegate()
+        
+        if let publicKey = sslPinningDelegate.publicKeyFromCertificate(certFileName:"your_certificate_name") {
+        print("Public Key:\(publicKey)")
+        }
+        
+         /*
+        let session = URLSession(configuration: .default, delegate: sslPinningDelegate, delegateQueue: nil)
+        
+        // Step 3: Make a network request using the configured URLSession
+        if let url = URL(string: "https://dip.sbigeneral.in/login/loginSBI") {
+            let task = session.dataTask(with: url) { (data, response, error) in
+                if let error = error {
+                    print("Failed with error: \(error.localizedDescription)")
+                    return
+                }
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("Response status code: \(httpResponse.statusCode)")
+                }
+                if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                    print("Response data: \(responseString)")
+                }
+            }
+            // Start the request
+            task.resume()
+         
+        }
+         */
+        checkIfJailBreak()
     }
 
     func loadWebView() {
@@ -159,7 +191,25 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
             }
     }
     
-   
+    func checkIfJailBreak() {
+        
+        DispatchQueue.global(qos: .background).async {
+            // Perform jailbreak detection in the background
+            let isJailbroken = JailbreakDetection.isDeviceJailbroken()
+            // Update UI or perform actions on the main thread
+            DispatchQueue.main.async {
+                if isJailbroken {
+                    print("Device is jailbroken.")
+                    DispatchQueue.main.asyncAfter(deadline: .now()) {
+                        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+                    }
+                } else {
+                    print("Device is not jailbroken.")
+                }
+            }
+        }
+    }
+
     
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -293,8 +343,6 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
                   print("Error showing notification: \(error)")
               }
           }
-
-        
 
     }
     
