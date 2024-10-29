@@ -135,3 +135,4 @@ class JailbreakDetection {
         return result != -1
     }
 }
+

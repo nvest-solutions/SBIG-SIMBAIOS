@@ -54,7 +54,7 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
         webView.configuration.userContentController.add(self, name: "blobConverterCallback")
         
         // commented below code because we are in uat branch
-//        verifySLLPinning()
+        verifySLLPinning()
         
         checkIfJailBreak()
     }
@@ -164,55 +164,55 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
                 }
             }
     }
-    func  verifySLLPinning(){
-       
-           
-           let sessionDelegate = SSLPinningDelegate()
-           let session = URLSession(configuration: .default, delegate: sessionDelegate, delegateQueue: nil)
+    
+    func verifySLLPinning(){
+        
             
-           // Example of making a network request
-           if let url = URL(string:websiteURL) {
-               let task = session.dataTask(with: url) { (data, response, error) in
-                   if let error = error {
-                       print("Failed to fetch data: \(error)")
-                       DispatchQueue.main.asyncAfter(deadline: .now()) {
-                           UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-                       }
-                       return
-                   }
-                   if let response = response as? HTTPURLResponse {
-                       print("Response status code: \(response.statusCode)")
-                   }
-                   if let data = data {
-                       print("Data received: \(data)")
-                   }
-               }
-               task.resume()
-           }
+            let sessionDelegate = SSLPinningDelegate()
+            let session = URLSession(configuration: .default, delegate: sessionDelegate, delegateQueue: nil)
+             
+            // Example of making a network request
+            if let url = URL(string:websiteURL) {
+                let task = session.dataTask(with: url) { (data, response, error) in
+                    if let error = error {
+                        print("Failed to fetch data: \(error)")
+                        DispatchQueue.main.asyncAfter(deadline: .now()) {
+                            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+                        }
+                        return
+                    }
+                    if let response = response as? HTTPURLResponse {
+                        print("Response status code: \(response.statusCode)")
+                    }
+                    if let data = data {
+                        print("Data received: \(data)")
+                    }
+                }
+                task.resume()
+            }
+             
             
-           
-           
-           
-           
-       }
-       func checkIfJailBreak() {
-           
-           DispatchQueue.global(qos: .background).async {
-               // Perform jailbreak detection in the background
-               let isJailbroken = JailbreakDetection.isDeviceJailbroken()
-               // Update UI or perform actions on the main thread
-               DispatchQueue.main.async {
-                   if isJailbroken {
-                       print("Device is jailbroken.")
-                       DispatchQueue.main.asyncAfter(deadline: .now()) {
-                           UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-                       }
-                   } else {
-                       print("Device is not jailbroken.")
-                   }
-               }
-           }
-       }
+        }
+
+    func checkIfJailBreak() {
+    
+     DispatchQueue.global(qos: .background).async {
+            // Perform jailbreak detection in the background
+            let isJailbroken = JailbreakDetection.isDeviceJailbroken()
+            // Update UI or perform actions on the main thread
+            DispatchQueue.main.async {
+                if isJailbroken {
+                    print("Device is jailbroken.")
+                    DispatchQueue.main.asyncAfter(deadline: .now()) {
+                        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+                    }
+                } else {
+                    print("Device is not jailbroken.")
+                }
+            }
+        }
+    }
+
 
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
