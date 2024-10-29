@@ -15,10 +15,8 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
     var webView: WKWebView!
     var activityIndicator: UIActivityIndicatorView!
     var fileMimeType: String = ""
-            let websiteURL="https://dip.sbigeneral.in/login/loginSBI"//prod
-    //       let websiteURL="https://dipuat.sbigeneral.in/Login/LoginSBI"//uat for nvest
-        //   let websiteURL="https://dipuat.sbigen.in/Login/LoginSBI"//uat for cleint
-    //    let websiteURL = "http://13.234.16.249:1027/capture.html"
+    let websiteURL="https://dip.sbigeneral.in/login/loginSBI"//prod
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -195,8 +193,8 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
         
     }
     func checkIfJailBreak() {
-        
-        DispatchQueue.global(qos: .background).async {
+    
+     DispatchQueue.global(qos: .background).async {
             // Perform jailbreak detection in the background
             let isJailbroken = JailbreakDetection.isDeviceJailbroken()
             // Update UI or perform actions on the main thread
