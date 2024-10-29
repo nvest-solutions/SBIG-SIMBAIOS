@@ -54,9 +54,9 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
         webView.configuration.userContentController.add(self, name: "blobConverterCallback")
         
         // commented below code because we are in uat branch
-      //  verifySLLPinning()
+//        verifySLLPinning()
         
-      //  checkIfJailBreak()
+        checkIfJailBreak()
     }
 
     func loadWebView() {
