@@ -15,8 +15,10 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
     var webView: WKWebView!
     var activityIndicator: UIActivityIndicatorView!
     var fileMimeType: String = ""
-
-
+  //  let websiteURL="https://dip.sbigeneral.in/login/loginSBI"//prod
+     let websiteURL="https://dipuat.sbigeneral.in/Login/LoginSBI"//uat for nvest
+//   let websiteURL="https://dipuat.sbigen.in/Login/LoginSBI"//uat for cleint
+//    let websiteURL = "http://13.234.16.249:1027/capture.html"
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -51,38 +53,10 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
         webView.scrollView.delegate = self
         webView.configuration.userContentController.add(self, name: "blobConverterCallback")
         
-        // Usage
+        // commented below code because we are in uat branch
+      //  verifySLLPinning()
         
-        
-        let sslPinningDelegate = SSLPinningDelegate()
-        
-        if let publicKey = sslPinningDelegate.publicKeyFromCertificate(certFileName:"your_certificate_name") {
-        print("Public Key:\(publicKey)")
-        }
-        
-         /*
-        let session = URLSession(configuration: .default, delegate: sslPinningDelegate, delegateQueue: nil)
-        
-        // Step 3: Make a network request using the configured URLSession
-        if let url = URL(string: "https://dip.sbigeneral.in/login/loginSBI") {
-            let task = session.dataTask(with: url) { (data, response, error) in
-                if let error = error {
-                    print("Failed with error: \(error.localizedDescription)")
-                    return
-                }
-                if let httpResponse = response as? HTTPURLResponse {
-                    print("Response status code: \(httpResponse.statusCode)")
-                }
-                if let data = data, let responseString = String(data: data, encoding: .utf8) {
-                    print("Response data: \(responseString)")
-                }
-            }
-            // Start the request
-            task.resume()
-         
-        }
-         */
-        checkIfJailBreak()
+      //  checkIfJailBreak()
     }
 
     func loadWebView() {
@@ -190,27 +164,56 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
                 }
             }
     }
-    
-    func checkIfJailBreak() {
-        
-        DispatchQueue.global(qos: .background).async {
-            // Perform jailbreak detection in the background
-            let isJailbroken = JailbreakDetection.isDeviceJailbroken()
-            // Update UI or perform actions on the main thread
-            DispatchQueue.main.async {
-                if isJailbroken {
-                    print("Device is jailbroken.")
-                    DispatchQueue.main.asyncAfter(deadline: .now()) {
-                        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-                    }
-                } else {
-                    print("Device is not jailbroken.")
-                }
-            }
-        }
-    }
+    func  verifySLLPinning(){
+       
+           
+           let sessionDelegate = SSLPinningDelegate()
+           let session = URLSession(configuration: .default, delegate: sessionDelegate, delegateQueue: nil)
+            
+           // Example of making a network request
+           if let url = URL(string:websiteURL) {
+               let task = session.dataTask(with: url) { (data, response, error) in
+                   if let error = error {
+                       print("Failed to fetch data: \(error)")
+                       DispatchQueue.main.asyncAfter(deadline: .now()) {
+                           UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+                       }
+                       return
+                   }
+                   if let response = response as? HTTPURLResponse {
+                       print("Response status code: \(response.statusCode)")
+                   }
+                   if let data = data {
+                       print("Data received: \(data)")
+                   }
+               }
+               task.resume()
+           }
+            
+           
+           
+           
+           
+       }
+       func checkIfJailBreak() {
+           
+           DispatchQueue.global(qos: .background).async {
+               // Perform jailbreak detection in the background
+               let isJailbroken = JailbreakDetection.isDeviceJailbroken()
+               // Update UI or perform actions on the main thread
+               DispatchQueue.main.async {
+                   if isJailbroken {
+                       print("Device is jailbroken.")
+                       DispatchQueue.main.asyncAfter(deadline: .now()) {
+                           UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+                       }
+                   } else {
+                       print("Device is not jailbroken.")
+                   }
+               }
+           }
+       }
 
-    
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
            if message.name == "blobConverterCallback" {
