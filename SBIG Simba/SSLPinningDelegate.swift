@@ -12,7 +12,7 @@ import CryptoKit
 class SSLPinningDelegate: NSObject, URLSessionDelegate {
     
     private func loadCertificate() -> SecCertificate? {
-            guard let certPath = Bundle.main.path(forResource: "sbigeneral", ofType: "cer"),
+            guard let certPath = Bundle.main.path(forResource: "sbi_general", ofType: "cer"),
                   let certData = NSData(contentsOfFile: certPath) else {
                 print("Certificate not found in app bundle.")
                 return nil
