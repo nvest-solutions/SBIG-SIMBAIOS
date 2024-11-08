@@ -15,45 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         UNUserNotificationCenter.current().delegate = self
-        requestNotificationAuthorization()
+       
         return true
-    }
-    func requestNotificationAuthorization() {
-           let center = UNUserNotificationCenter.current()
-           center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-               if let error = error {
-                   print("Authorization request error: \(error)")
-               }
-               if granted {
-                   print("Authorization granted")
-
-               } else {
-                   print("Authorization denied")
-                   DispatchQueue.main.async {
-                                  self.showNotificationDeniedAlert()
-                              }
-               }
-           }
-       }
-    func showNotificationDeniedAlert() {
-        guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else { return }
-        
-        let alert = UIAlertController(title: "Permission Required", message: "Please Grant Permissions to download pdf.", preferredStyle: .alert)
-        
-        let settingsAction = UIAlertAction(title: "Go to Settings", style: .default) { _ in
-            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
-            if UIApplication.shared.canOpenURL(settingsUrl) {
-                UIApplication.shared.open(settingsUrl, completionHandler: nil)
-            }
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel){ _ in
-            self.requestNotificationAuthorization()
-        }
-        
-        alert.addAction(settingsAction)
-        alert.addAction(cancelAction)
-        
-        rootViewController.present(alert, animated: true, completion: nil)
     }
     
     // Handle notification when the app is in the foreground
