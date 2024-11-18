@@ -8,21 +8,46 @@
 import UIKit
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterDelegate,UIDocumentInteractionControllerDelegate{
+class AppDelegate: UIResponder, UIApplicationDelegate ,
+                   UNUserNotificationCenterDelegate,
+                   UIDocumentInteractionControllerDelegate{
 
     var window: UIWindow?
-
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         UNUserNotificationCenter.current().delegate = self
-       
+       // setupGlobalErrorHandling()
         return true
     }
+    func handleUncaughtException(exception: NSException) {
+            // Log the exception details (useful for debugging)
+            print("Uncaught Exception: \(exception.name), \(exception.reason ?? "No reason")")
+            print("Stack Trace: \(exception.callStackSymbols)")
+     
+            // Show the alert to the user
+            DispatchQueue.main.async {
+                self.showAlertDialog(title: "Unexpected Error", message: "The app encountered an error. Please try restarting the app.")
+            }
+        }
+     
+        func showAlertDialog(title: String, message: String) {
+            // Ensure there's a root view controller to present the alert
+            if let rootViewController = window?.rootViewController {
+                let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+     
+                // Present the alert on the root view controller
+                rootViewController.present(alertController, animated: true, completion: nil)
+            }
+        }
+   
     
     // Handle notification when the app is in the foreground
-        func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-            completionHandler([.alert, .sound, .badge])
+       /*
+                       func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .sound, .badge])
         }
+                       */
     // MARK: UISceneSession Lifecycle
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1897C56F2CE4BF0F00BE701A /* GlobalErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1897C56E2CE4BF0F00BE701A /* GlobalErrorHandler.swift */; };
 		18AA3CBE2B62272D00755C62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AA3CBD2B62272D00755C62 /* AppDelegate.swift */; };
 		18AA3CC02B62272D00755C62 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AA3CBF2B62272D00755C62 /* SceneDelegate.swift */; };
 		18AA3CC22B62272D00755C62 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AA3CC12B62272D00755C62 /* ViewController.swift */; };
@@ -41,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1897C56E2CE4BF0F00BE701A /* GlobalErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalErrorHandler.swift; sourceTree = "<group>"; };
 		18AA3CBA2B62272D00755C62 /* SBIG Simba.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SBIG Simba.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		18AA3CBD2B62272D00755C62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		18AA3CBF2B62272D00755C62 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 		18AA3CBC2B62272D00755C62 /* SBIG Simba */ = {
 			isa = PBXGroup;
 			children = (
+				1897C56E2CE4BF0F00BE701A /* GlobalErrorHandler.swift */,
 				18AA3CBD2B62272D00755C62 /* AppDelegate.swift */,
 				18AA3CBF2B62272D00755C62 /* SceneDelegate.swift */,
 				34DC68232CCF6897000AE351 /* RootDetection.swift */,
@@ -232,6 +235,8 @@
 				Base,
 			);
 			mainGroup = 18AA3CB12B62272D00755C62;
+			packageReferences = (
+			);
 			productRefGroup = 18AA3CBB2B62272D00755C62 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -280,6 +285,7 @@
 				34FACDBB2CCA693C006C7B8B /* SSLPinningDelegate.swift in Sources */,
 				18AA3CC22B62272D00755C62 /* ViewController.swift in Sources */,
 				18AA3CBE2B62272D00755C62 /* AppDelegate.swift in Sources */,
+				1897C56F2CE4BF0F00BE701A /* GlobalErrorHandler.swift in Sources */,
 				3434BAF42CA2EF7000DC3267 /* BiometricViewController.swift in Sources */,
 				34DC68242CCF6898000AE351 /* RootDetection.swift in Sources */,
 				18AA3CC02B62272D00755C62 /* SceneDelegate.swift in Sources */,
@@ -461,13 +467,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 82AS48KZB4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SBIG Simba/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = SIMBA;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Please grant camera access";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs access to the camera to upload photos.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "$(PRODUCT_NAME) Authentication with TouchId or FaceID";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Please grant microphone access";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please grant photo gallery access";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -480,7 +487,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sbigsimba.nvest.SBIG-Simba";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -501,13 +508,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 82AS48KZB4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SBIG Simba/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = SIMBA;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Please grant camera access";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs access to the camera to upload photos.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "$(PRODUCT_NAME) Authentication with TouchId or FaceID";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Please grant microphone access";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please grant photo gallery access";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -520,11 +528,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sbigsimba.nvest.SBIG-Simba";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "SImba IOS";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Simba Profile Latest";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "SBIG-Simba-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

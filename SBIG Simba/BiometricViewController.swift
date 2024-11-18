@@ -46,7 +46,7 @@ extension BiometricViewController {
         let authContext = LAContext()
         if #available(iOS 11, *) {
             let _ = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
-            switch(authContext.biometryType) {
+            	switch(authContext.biometryType) {
             case .none:
                 return .none
             case .touchID:

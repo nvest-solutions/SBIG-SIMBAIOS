@@ -10,15 +10,20 @@ import UIKit
 import WebKit
 import LocalAuthentication
 
-class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHandler{
+class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHandler,
+                        UNUserNotificationCenterDelegate
+{
 
     var webView: WKWebView!
     var activityIndicator: UIActivityIndicatorView!
     var fileMimeType: String = ""
     let websiteURL="https://dip.sbigeneral.in/login/loginSBI"//prod
     
+   // let websiteURL = "http://13.234.16.249:1027/capture.html"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        UNUserNotificationCenter.current().delegate = self
         
         navigationController?.setNavigationBarHidden(true, animated: true)
         let webConfiguration = WKWebViewConfiguration()
@@ -31,11 +36,11 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
         webView.configuration.preferences.javaScriptEnabled = true
-     
+        
         view.addSubview(webView)
- 
+        
         if #available(macOS 13.3, iOS 16.4, tvOS 16.4, *) {
-//            webView.isInspectable = true
+            //            webView.isInspectable = true
         }
         // Creating and configure loading indicator
         activityIndicator = UIActivityIndicatorView(style: .large)
@@ -54,9 +59,48 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
         // Usage
         
         verifySLLPinning()
-   
+        
         checkIfJailBreak()
+        
+       
+        
+        
     }
+    
+    
+    private func showNotificationDeniedAlert() {
+
+        let alert = UIAlertController(
+
+            title: "Notifications Disabled",
+
+            message: "Please enable notifications in Settings to receive file download alerts.",
+
+            preferredStyle: .alert
+
+        )
+
+        alert.addAction(UIAlertAction(title: "Open Settings", style: .default) { _ in
+
+            if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+
+                UIApplication.shared.open(settingsURL)
+
+            }
+
+        })
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel){ _ in
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+            }
+
+        })
+
+        present(alert, animated: true)
+
+    }
+ 
 
     func loadWebView() {
 
@@ -83,11 +127,27 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
 
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        print("WebView did finish loading")
-
+        	
+      
         // Hide loading indicator when WebView finishes loading
+        
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
+
+            print("WebView did finish loading")
+                        
+          
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                DispatchQueue.main.async {
+                    if granted {
+                        print("Notification permission granted")
+                    } else {
+                        print("Notification permission denied")
+                        self.showNotificationDeniedAlert()
+                    }
+                }
+            }
+
         }
     }
 
@@ -171,7 +231,7 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
         if let url = URL(string:websiteURL) {
             let task = session.dataTask(with: url) { (data, response, error) in
                 if let error = error {
-                    print("Failed to fetch data: \(error)")
+                    print("Failed to feth data: \(error)")
                     DispatchQueue.main.asyncAfter(deadline: .now()) {
                         UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
                     }
@@ -202,7 +262,7 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
                 if isJailbroken {
                     print("Device is jailbroken.")
                     DispatchQueue.main.asyncAfter(deadline: .now()) {
-                        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+//                        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
                     }
                 } else {
                     print("Device is not jailbroken.")
@@ -273,80 +333,129 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
     }
     
     
-       /*
-       func handleBase64Data(_ base64String: String) {
-           
-
-           var newBase64=base64String.replacingOccurrences(of: "\n", with:"")
-           var fileExtension: String="pdf"
-           
-           if let ext = getFileExtension(fromBase64String: newBase64) {
-               print("The file extension is: \(ext)")
-               fileExtension = ext
-               newBase64 = newBase64.replacingOccurrences(of: "data:application/\(ext);base64,", with: "")
-           } else {
-               print("Could not determine the file extension.")
-           }
-
-               
-           if let data = Data(base64Encoded: newBase64) {
-                   // Save the data to a file
-                   let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-               
-               let now = Date()
-
-               let formatter = DateFormatter()
-               formatter.dateFormat = "yyyyMMdd_HHmmss"
-               let timestamp = formatter.string(from: now)
-               
-                   let filePath = documentsPath.appendingPathComponent("\(timestamp)_.\(fileExtension)")
-                   
-                   do {
-                       try data.write(to: filePath)
-                       print("File saved to: \(filePath)")
-                       
-                       DispatchQueue.main.async {
-                           self.showNotification(filePath: filePath)
-                       }
-
-                   } catch {
-                       print("Error saving file: \(error)")
-                   }
-               }
-       }
-        */
+       
+//       func handleBase64Data(_ base64String: String) {
+//           
+//
+//           var newBase64=base64String.replacingOccurrences(of: "\n", with:"")
+//           var fileExtension: String="pdf"
+//           
+//           if let ext = getFileExtension(fromBase64String: newBase64) {
+//               print("The file extension is: \(ext)")
+//               fileExtension = ext
+//               newBase64 = newBase64.replacingOccurrences(of: "data:application/\(ext);base64,", with: "")
+//           } else {
+//               print("Could not determine the file extension.")
+//           }
+//
+//               
+//           if let data = Data(base64Encoded: newBase64) {
+//                   // Save the data to a file
+//                   let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+//               
+//               let now = Date()
+//
+//               let formatter = DateFormatter()
+//               formatter.dateFormat = "yyyyMMdd_HHmmss"
+//               let timestamp = formatter.string(from: now)
+//               
+//                   let filePath = documentsPath.appendingPathComponent("\(timestamp)_.\(fileExtension)")
+//                   
+//                   do {
+//                       try data.write(to: filePath)
+//                       print("File saved to: \(filePath)")
+//                       
+//                       DispatchQueue.main.async {
+//                           self.showNotification(filePath: filePath)
+//                       }
+//
+//                   } catch {
+//                       print("Error saving file: \(error)")
+//                   }
+//               }
+//       }
+//        
     
+   
     func showNotification(filePath: URL) {
         let content = UNMutableNotificationContent()
           content.title = "File downloaded"
-          content.body = "PDF"
+          content.body = "Tap to open PDF"
+        
           content.sound = UNNotificationSound.default
           content.userInfo = ["filePath": filePath.path]
           
           // Set categoryIdentifier for the notification
           content.categoryIdentifier = "persistentNotification"
-
-          let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-
-          let notificationCenter = UNUserNotificationCenter.current()
+        let openAction = UNNotificationAction(
+                    identifier: "openFile",
+                    title: "Open",
+                    options: .foreground
+                )
+                // Create the category with the open action
+                let category = UNNotificationCategory(
+                    identifier: "persistentNotification",
+                    actions: [openAction],
+                    intentIdentifiers: [],
+                    options: .customDismissAction
+                )
           
-          // Define the category with options
-          let category = UNNotificationCategory(identifier: "persistentNotification",
-                                                actions: [],
-                                                intentIdentifiers: [],
-                                                options: .customDismissAction)
-          
-          // Register the category
-          notificationCenter.setNotificationCategories([category])
 
-          notificationCenter.add(request) { error in
-              if let error = error {
-                  print("Error showing notification: \(error)")
-              }
-          }
-
+        // Register the category
+                let notificationCenter = UNUserNotificationCenter.current()
+                notificationCenter.setNotificationCategories([category])
+                let request = UNNotificationRequest(
+                    identifier: UUID().uuidString,
+                    content: content,
+                    trigger: nil
+                )
+                notificationCenter.add(request) { error in
+                    if let error = error {
+                        print("Error showing notification: \(error)")
+                    }
+                }
     }
     
+    // Handle notification when app is in foreground
+        func userNotificationCenter(
+            _ center: UNUserNotificationCenter,
+            willPresent notification: UNNotification,
+            withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+        ) {
+            if #available(iOS 14.0, *) {
+                completionHandler([.banner, .sound])
+            } else {         // For iOS 13 and earlier
+                completionHandler([.alert, .sound])
+            }
+             
+        }
+        // Handle notification response
+    
+        func userNotificationCenter(
+            _ center: UNUserNotificationCenter,
+            didReceive response: UNNotificationResponse,
+            withCompletionHandler completionHandler: @escaping () -> Void
+        ) {
+            // Get the file path from userInfo
+            if let filePath = response.notification.request.content.userInfo["filePath"] as? String {
+                let fileURL = URL(fileURLWithPath: filePath)
+                // Open the file
+                openFile(at: fileURL)
+            }
+            completionHandler()
+        }
+    
+        func openFile(at fileURL: URL) {
+            // Check if the file exists
+            guard FileManager.default.fileExists(atPath: fileURL.path) else {
+                print("File doesn't exist at path: \(fileURL.path)")
+                return
+            }
+            // Create and present document interaction controller
+            let documentInteractionController = UIDocumentInteractionController(url: fileURL)
+            documentInteractionController.delegate = self
+            documentInteractionController.presentPreview(animated: true)
+        }
 
     func getFileExtension(fromBase64String base64String: String) -> String? {
         // Check if the Base64 string contains a data URL prefix
@@ -386,16 +495,29 @@ extension ViewController: UIScrollViewDelegate {
 
 
 // Implement the UIDocumentPickerDelegate to handle success and errors
-extension ViewController: UIDocumentPickerDelegate {
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+
+extension ViewController: UIDocumentPickerDelegate, UIDocumentInteractionControllerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [	URL]) {
         if let savedFileURL = urls.first {
             print("File successfully saved at: \(savedFileURL)")
-            // Optionally, you can show a notification or perform further actions here
+            showNotification(filePath: savedFileURL)
+            // Assuming showNotification will later call a method to preview the document
         }
     }
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         print("Document picker was cancelled.")
     }
+ 
+    // Required delegate method for UIDocumentInteractionControllerDelegate
+    func documentInteractionControllerViewControllerForPreview(
+            _ controller: UIDocumentInteractionController
+        ) -> UIViewController {
+            return self
+        }
+    // Method to preview the document
+    func previewDocument(at url: URL) {
+        let documentInteractionController = UIDocumentInteractionController(url: url)
+        documentInteractionController.delegate = self  // Set the delegate
+        documentInteractionController.presentPreview(animated: true)
+    }
 }
-
-

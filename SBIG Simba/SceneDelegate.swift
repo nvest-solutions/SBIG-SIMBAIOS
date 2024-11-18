@@ -12,12 +12,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
 
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
-    }
+//    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+//        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
+//        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
+//        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+//        guard let _ = (scene as? UIWindowScene) else { return }
+//    }
+ 
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
@@ -46,7 +47,42 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
+    
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+            if let notification = connectionOptions.notificationResponse {
+                if let filePath = notification.notification.request.content.userInfo["filePath"] as? String {
+                    let fileURL = URL(fileURLWithPath: filePath)
+                    // Get reference to your view controller
+                    if let navigationController = window?.rootViewController as? UINavigationController,
+                       let viewController = navigationController.viewControllers.first as? ViewController {
+                        viewController.openFile(at: fileURL)
+                    } else if let viewController = window?.rootViewController as? ViewController {
+                        viewController.openFile(at: fileURL)
+                    }
+                }
+            }
+        }
 
+//    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+//        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
+//        guard let _ = (scene as? UIWindowScene) else { return }
+//        // Check if there is a notification response in the connection options
+//        if let notification = connectionOptions.notificationResponse {
+//            // Retrieve the file path from the notification's userInfo
+//            if let filePath = notification.notification.request.content.userInfo["filePath"] as? String {
+//                let fileURL = URL(fileURLWithPath: filePath)
+//                // Get reference to the root view controller and open the file if possible
+//                if let navigationController = window?.rootViewController as? UINavigationController,
+//                   let viewController = navigationController.viewControllers.first as? ViewController {
+//                    // Open file in the first view controller in the navigation stack
+//                    viewController.openFile(at: fileURL)
+//                } else if let viewController = window?.rootViewController as? ViewController {
+//                    // Open file directly if the root view controller is the expected view controller
+//                    viewController.openFile(at: fileURL)
+//                }
+//            }
+//        }
+//    }
 
 }
 
