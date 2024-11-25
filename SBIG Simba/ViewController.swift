@@ -17,7 +17,7 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
     var webView: WKWebView!
     var activityIndicator: UIActivityIndicatorView!
     var fileMimeType: String = ""
-    let websiteURL="https://dip.sbigeneral.in/login/loginSBI"//prod
+    let websiteURL="https://dip.sbigeneral.in/Login/loginSBI"//prod
     
    // let websiteURL = "http://13.234.16.249:1027/capture.html"
     
@@ -232,9 +232,9 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
             let task = session.dataTask(with: url) { (data, response, error) in
                 if let error = error {
                     print("Failed to feth data: \(error)")
-                    DispatchQueue.main.asyncAfter(deadline: .now()) {
-                        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-                    }
+//                    DispatchQueue.main.asyncAfter(deadline: .now()) {
+//                        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+//                    }
                     return
                 }
                 if let response = response as? HTTPURLResponse {
@@ -261,9 +261,9 @@ class ViewController: UIViewController, WKNavigationDelegate ,WKScriptMessageHan
             DispatchQueue.main.async {
                 if isJailbroken {
                     print("Device is jailbroken.")
-                    DispatchQueue.main.asyncAfter(deadline: .now()) {
+//                    DispatchQueue.main.asyncAfter(deadline: .now()) {
 //                        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-                    }
+//                    }
                 } else {
                     print("Device is not jailbroken.")
                 }
