@@ -476,10 +476,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SBIG Simba/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = SIMBA;
-				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs access to the camera to upload photos.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs access to the camera to upload Form 60 photos.";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "$(PRODUCT_NAME) Authentication with TouchId or FaceID";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Please grant microphone access";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please grant photo gallery access";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please grant photo gallery access to upload Form 60 photos.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -490,11 +490,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.4;
+				MARKETING_VERSION = 2.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sbigsimba.nvest.SBIG-Simba";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "SImba IOS";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Simba Nvest Profile";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "SBIG-Simba-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -517,10 +517,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SBIG Simba/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = SIMBA;
-				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs access to the camera to upload photos.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs access to the camera to upload Form 60 photos.";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "$(PRODUCT_NAME) Authentication with TouchId or FaceID";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Please grant microphone access";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please grant photo gallery access";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please grant photo gallery access to upload Form 60 photos.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -531,7 +531,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.4;
+				MARKETING_VERSION = 2.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sbigsimba.nvest.SBIG-Simba";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
