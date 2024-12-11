@@ -495,7 +495,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sbigsimba.nvest.SBIG-Simba";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Simba Nvest Profile";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "SImba IOS";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "SBIG-Simba-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -537,7 +537,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sbigsimba.nvest.SBIG-Simba";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Simba Nvest Profile";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "SImba IOS";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "SBIG-Simba-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
